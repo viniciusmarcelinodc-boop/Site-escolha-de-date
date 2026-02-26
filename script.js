@@ -77,14 +77,14 @@ const fluxo = {
     ],
   },
 
-  romanticoTipo: {
-    pergunta: "Qual momento romântico? ✨",
-    campo: "categoria",
-    opcoes: [
-      { texto: "🍽️ Almoço / Jantar", proximo: "romanticoJantar" },
-      { texto: "☕ Cafeteria no centro", proximo: "resumo" },
-    ],
-  },
+romanticoTipo: {
+  pergunta: "Qual momento romântico? ✨",
+  campo: "categoria",
+  opcoes: [
+    { texto: "🍽️ Almoço / Jantar", proximo: "romanticoJantar" },
+    { texto: "☕ Cafeteria no centro", proximo: "cafeteriaSugestao" },
+  ],
+},
 
   romanticoJantar: {
     pergunta: "Escolhe o estilo 🍷",
@@ -124,6 +124,21 @@ const fluxo = {
     ],
   },
 
+  cafeteriaSugestao: {
+    pergunta: "Quer sugerir uma cafeteria? ☕",
+    campo: null,
+    opcoes: [
+      { texto: "Sim 💌", proximo: "escreverSugestao" },
+      { texto: "Não 😅", proximo: "resumo" },
+    ],
+  },
+
+  escreverSugestao: {
+    pergunta: "Qual cafeteria você sugere? ✍️",
+    campo: "detalhe",
+    opcoes: [],
+  },
+
   encerrar: {
     pergunta: "Tudo bem, nem queria mesmo 😤",
     campo: null,
@@ -135,13 +150,64 @@ const fluxo = {
 // RENDERIZAÇÃO
 // ===============================
 
+
+//----------IMAGENS INICIAIS----------
+function mostrarImagensIniciais() {
+  const img1 = document.createElement("img");
+  img1.src = "Imgens-site/Flor%20na%20boca.jpg";
+  img1.classList.add("img-inicial", "img-1");
+
+  const img2 = document.createElement("img");
+  img2.src = "Imgens-site/download%20(1).jpg";
+  img2.classList.add("img-inicial", "img-2");
+
+  document.body.appendChild(img1);
+  document.body.appendChild(img2);
+}
+
 function renderizar(etapa) {
+  
   const app = document.getElementById("app");
   app.innerHTML = "";
+
+  if (etapa === "inicio") {
+  
+}
 
   if (etapa === "resumo") return mostrarResumo();
 
   const dados = fluxo[etapa];
+
+  // Se for etapa de escrita personalizada
+if (etapa === "escreverSugestao") {
+  const pergunta = document.createElement("h2");
+  pergunta.innerText = dados.pergunta;
+  app.appendChild(pergunta);
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "Digite o nome da cafeteria...";
+  input.style.padding = "10px";
+  input.style.width = "80%";
+  input.style.margin = "10px 0";
+  input.style.borderRadius = "8px";
+  input.style.border = "1px solid #ff004c";
+  input.style.background = "black";
+  input.style.color = "white";
+
+  app.appendChild(input);
+
+  const confirmar = document.createElement("button");
+  confirmar.innerText = "Confirmar ☕";
+  confirmar.onclick = () => {
+    escolhas.detalhe = input.value || "Sem sugestão específica";
+    renderizar("resumo");
+  };
+
+  app.appendChild(confirmar);
+
+  return;
+}
 
   const pergunta = document.createElement("h2");
   pergunta.innerText = dados.pergunta;
@@ -266,6 +332,7 @@ function reiniciar() {
 // ===============================
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Centralização do body
   document.body.style.display = "flex";
   document.body.style.flexDirection = "column";
   document.body.style.alignItems = "center";
@@ -273,18 +340,15 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.style.minHeight = "100vh";
   document.body.style.margin = "0";
 
+  // Inicia fluxo
   renderizar("inicio");
 
+  // 🔐 Botão Admin Minimalista
   const adminBtn = document.createElement("button");
-  adminBtn.innerText = "🔐 Admin";
+  adminBtn.innerText = "🔐";
+  adminBtn.classList.add("admin-btn");
   adminBtn.onclick = modoAdmin;
-
-  adminBtn.style.fontSize = "12px";
-  adminBtn.style.padding = "4px 10px";
-  adminBtn.style.position = "fixed";
-  adminBtn.style.top = "10px";
-  adminBtn.style.right = "10px";
-  adminBtn.style.borderRadius = "6px";
 
   document.body.appendChild(adminBtn);
 });
+
